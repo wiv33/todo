@@ -11,12 +11,22 @@
         <h1>Todo App</h1>
         <input type="text" v-model="inputText" v-on:keydown.enter="addItem">
     <button v-on:click="addItem">add</button>
+    <ul>
+        <li v-for="(todoItem, index) in todoItems">
+            {{todoItem}} 
+            <button @click="removeItem(todoItem, index)">remove</button>
+        </li>
+    </ul>
     </div>
 <script>
     new Vue({
         el: '#app',
         data: {
-            inputText: 'fwef'
+            inputText: '',
+            todoItems: []
+        },
+        created: function() {
+            this.fetchItems();
         },
         methods: {
             addItem: function(e) {
@@ -26,8 +36,16 @@
                 let value = this.inputText;
                 localStorage.setItem(value, value);
                 this.inputText = '';
-                
-                
+                this.todoItems.push(value);
+            }, fetchItems: function() {
+                for (var i = 0; i <localStorage.length; i++) {
+                    var value = localStorage.key(i);
+                    console.log(this);
+                    this.todoItems.push(value);
+                }
+            }, removeItem:function(item, index) {
+                localStorage.removeItem(item);
+                this.todoItems.splice(index, 1);
             }
         }
     });
